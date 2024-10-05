@@ -1,0 +1,60 @@
+<div id="cube-container"></div>
+
+<script>
+  const spaceSize = 8.05;
+  const yLimit = 14;
+  const cubeCount = 100;
+  const cubeContainer = document.getElementById("cube-container");
+
+  function getRandomColor() {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+  }
+
+  function getRandomPosition() {
+    const x = (Math.random() * (2 * spaceSize)) - spaceSize;
+    const y = Math.random() * yLimit;
+    const z = (Math.random() * (2 * spaceSize)) - spaceSize;
+    return { x, y, z };
+  }
+
+  function createCube(id) {
+    const cube = document.createElement('m-cube');
+    cube.setAttribute('id', `cube-${id}`);
+    cube.setAttribute('height', '1');
+    cube.setAttribute('width', '1');
+    cube.setAttribute('depth', '1');
+    cubeContainer.appendChild(cube);
+    return cube;
+  }
+
+  function updateCube(cube) {
+    const newPosition = getRandomPosition();
+    const newColor = getRandomColor();
+
+    cube.setAttribute("x", newPosition.x.toFixed(2));
+    cube.setAttribute("y", newPosition.y.toFixed(2));
+    cube.setAttribute("z", newPosition.z.toFixed(2));
+    cube.setAttribute("color", newColor);
+  }
+
+  function scheduleUpdate(cube, delay) {
+    setTimeout(function() {
+      updateCube(cube);
+      scheduleUpdate(cube, Math.random() * 1000);
+    }, delay);
+  }
+
+  const cubes = [];
+  for (let i = 0; i < cubeCount; i++) {
+    const cube = createCube(i);
+    updateCube(cube);
+    cubes.push(cube);
+    scheduleUpdate(cube, Math.random() * 1000);
+  }
+
+</script>
